@@ -4440,6 +4440,55 @@ namespace OpenBabel
   }
 
   /**
+    My private function
+    \param calculation - one of: ElVDW, El, VDW
+    \param type - number for type of atom for force field
+    \param pchg - partial charge for atom
+    \param x - x coordinate for probe atom
+    \param y - y coordinate for probe atom
+    \param z - z coordinate for probe atom
+   */
+  double OBForceField::calculateEl_VDW(const char* calculation,const char* type,double pchg,double x,double y,double z)
+  {
+      // Add the probe atom
+      _mol.BeginModify();
+      OBAtom *atom = _mol.NewAtom();
+      int index = atom->GetIdx();
+      _mol.EndModify();
+      SetTypes();
+      atom->SetType(type);
+      atom->SetPartialCharge(pchg);
+
+      SetupCalculations();
+
+      atom = _mol.GetAtom(index);
+      double *pos = atom->GetCoordinate();
+
+      double result = 0.0;
+
+      pos[0] = x;
+      pos[1] = y;
+      pos[2] = z;
+      if (strcmp(calculation,"ElVDW")==0)
+      {
+        result = E_VDW(false);
+        result += E_Electrostatic(false);
+      } else if (strcmp(calculation,"El")==0)
+      {
+        result = E_Electrostatic(false);
+      } else if (strcmp(calculation,"VDW")==0)
+      {
+        result = E_VDW(false);
+      }
+
+      _mol.BeginModify();
+      _mol.DeleteAtom(atom);
+      _mol.EndModify();
+
+      return result;
+  }
+
+  /**
    * @example obforcefield_energy.cpp
    * Example showing how to compute the enrgy for a molecule.
    */

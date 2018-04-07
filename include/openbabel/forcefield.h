@@ -754,6 +754,17 @@ namespace OpenBabel
      */
     OBGridData *GetGrid(double step, double padding, const char *type, double pchg);
 
+    /**
+      My private function
+      \param calculation - one of: ElVDW, El, VDW
+      \param type - number for type of atom for force field
+      \param pchg - partial charge for atom
+      \param x - x coordinate for probe atom
+      \param y - y coordinate for probe atom
+      \param z - z coordinate for probe atom
+     */
+    double calculateEl_VDW(const char* calculation,const char* type,double pchg,double x,double y,double z);
+
     /////////////////////////////////////////////////////////////////////////
     // Interacting groups                                                  //
     /////////////////////////////////////////////////////////////////////////
